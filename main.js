@@ -13,22 +13,22 @@ function sendHelpMessage (chatId) {
 
 bot.onText(/\/static (\d+)/, async (msg, match) => {
   const chatId = msg.chat.id
-  const staticStickerId = match[1]
-  const staticStickerName = getStaticStickerSetName(staticStickerId)
   try {
-    const { message_id: messageId } = await bot.sendMessage(chatId, '開始搬運')
+    const staticStickerId = match[1]
+    const staticStickerName = getStaticStickerSetName(staticStickerId)
+    const { message_id: messageId } = await bot.sendMessage(chatId, '開始搬運...')
     const stickerPack = await getLineStaticStickerPack(staticStickerId)
     const numOftickers = stickerPack.stickerImages.length
-    await bot.editMessageText(`貼圖 "${stickerPack.title['zh-Hant'] || stickerPack.title.en}" 解析完畢`, {
-      chat_id: chatId,
-      message_id: messageId
-    })
-    await bot.editMessageText(`貼圖 "${stickerPack.title['zh-Hant'] || stickerPack.title.en}" 開始上傳`, {
+    await bot.editMessageText(`貼圖 "${stickerPack.title['zh-Hant'] || stickerPack.title.en}" 上傳進度 (${numOftickers - stickerPack.stickerImages.length}/${numOftickers})`, {
       chat_id: chatId,
       message_id: messageId
     })
     const title = `${stickerPack.title['zh-Hant'] || stickerPack.title.en} (authored by ${stickerPack.author['zh-Hant'] || stickerPack.author.en})`
     await bot.createNewStickerSet(config.userId, staticStickerName, title, stickerPack.stickerImages.shift(), '👿')
+    await bot.editMessageText(`貼圖 "${stickerPack.title['zh-Hant'] || stickerPack.title.en}" 上傳進度 (${numOftickers - stickerPack.stickerImages.length}/${numOftickers})`, {
+      chat_id: chatId,
+      message_id: messageId
+    })
     while (stickerPack.stickerImages.length) {
       await bot.addStickerToSet(config.userId, staticStickerName, stickerPack.stickerImages.shift(), '👿')
       await bot.editMessageText(`貼圖 "${stickerPack.title['zh-Hant'] || stickerPack.title.en}" 上傳進度 (${numOftickers - stickerPack.stickerImages.length}/${numOftickers})`, {
@@ -45,7 +45,7 @@ bot.onText(/\/static (\d+)/, async (msg, match) => {
       reply_to_message_id: msg.message_id
     })
   } catch (error) {
-    await bot.editMessageText(error.message, {
+    await bot.sendMessage(chatId, error.message, {
       reply_to_message_id: msg.message_id
     })
   }
@@ -56,4 +56,4 @@ bot.onText(/\/(help)|(start)/, async msg => {
   await sendHelpMessage(chatId)
 })
 
-bot.startPolling()
+bot.startPolling().catch(_ => console.log('error occured'))

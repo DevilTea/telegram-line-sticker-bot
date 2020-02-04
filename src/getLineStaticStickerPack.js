@@ -5,7 +5,7 @@ const resizeStaticStickerImage = require('./resizeStaticStickerImage')
 async function getLineStaticStickerPack (stickerId) {
   const directory = await unzipper.Open.url(request, `https://sdl-stickershop.line.naver.jp/stickershop/v1/product/${stickerId}/iphone/stickers@2x.zip`)
     .catch(_ => {
-      throw Error('Static Sticker Not Found')
+      throw Error('Sticker Pack Not Found')
     })
   const meta = JSON.parse(await (await directory.files.find(file => file.path.endsWith('.meta')).buffer()).toString())
   // const packImage = await directory.files.find(file => file.path.startsWith('tab_on')).buffer()
@@ -15,6 +15,10 @@ async function getLineStaticStickerPack (stickerId) {
   }).map(file => {
     return file.buffer()
       .then(buffer => resizeStaticStickerImage(buffer))
+      .catch(error => {
+        // console.log(file.path)
+        throw error
+      })
   }))
 
   return {
