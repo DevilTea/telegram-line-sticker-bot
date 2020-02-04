@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "jimp": "^0.9.3",
+    "node-telegram-bot-api": "^0.40.0",
     "promise-fs": "^2.1.1",
     "request": "^2.88.0",
     "unzipper": "^0.10.7"
