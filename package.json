@@ -18,6 +18,7 @@
     "eslint-plugin-standard": "^4.0.1"
   },
   "dependencies": {
+    "promise-fs": "^2.1.1",
     "request": "^2.88.0",
     "unzipper": "^0.10.7"
   }
