@@ -115,7 +115,7 @@ class Bot {
         await updateEditableMessage('目前尚未支援"隨你填貼圖包"移植，敬請期待！')
         return
       }
-      const stickerSetName = `static_by_${this._username}`
+      const stickerSetName = `static_${staticStickerId}_by_${this._username}`
       const stickerSetTitle = `${meta.title['zh-Hant'] || meta.title.en}`
       let stickerSet = await this._bot.getStickerSet(stickerSetName).catch(_ => null)
       if (!stickerSet) {
