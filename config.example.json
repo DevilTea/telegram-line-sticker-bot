@@ -1,6 +1,6 @@
 {
-  "ownerUserId": "your username",
-  "ownerUsername": "your user_id",
+  "ownerUserId": 123123,
+  "ownerUsername": "asdasdsad",
   "token": "your telegram bot token",
   "maxSizeOfTaskQueue": 10,
   "userIdWhiteList": []
