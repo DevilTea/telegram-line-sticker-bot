@@ -47,7 +47,7 @@ export class TaskCenter {
         )
         await updateMessage(`貼圖 ID: ${stickerId}，開始執行`)
         const emitter = createEmitter()
-        const messageMap: Record<TaskErrorReason, string> = {
+        const messageMap: Record<TaskErrorReason['message'], string> = {
           'Unknown sticker id': `未知的貼圖 ID: ${stickerId}`,
           "Failed to get sticker's zip buffer": `無法獲得貼圖 zip，貼圖 ID: ${stickerId}`,
           'Failed to save sticker zip file': `無法儲存貼圖 zip，貼圖 ID: ${stickerId}`,
@@ -55,7 +55,8 @@ export class TaskCenter {
           'Failed to load sicker pack': `無法讀取貼圖資料，貼圖 ID: ${stickerId}`
         }
         emitter.on('error', async (reason) => {
-          await updateMessage(messageMap[reason])
+          await updateMessage(`${messageMap[reason.message]}\n\n錯誤訊息：${reason.error}`)
+          console.log(`=================================\n錯誤訊息：${reason.error}\n=================================`)
         })
         const stickerPack = await prepareUploadStickerPack(stickerId, emitter)
         if (stickerPack == null) {

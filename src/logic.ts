@@ -60,9 +60,15 @@ async function getSickerZipBuffer (stickerId: string, emitter?: Emitter<TaskEven
     .then(({ data }) => ({ buffer: data }))
     .catch((error: AxiosError) => {
       if (error?.response?.status === 404) {
-        emitter?.emit('error', 'Unknown sticker id')
+        emitter?.emit('error', {
+          message: 'Unknown sticker id',
+          error: error
+        })
       } else {
-        emitter?.emit('error', "Failed to get sticker's zip buffer")
+        emitter?.emit('error', {
+          message: "Failed to get sticker's zip buffer",
+          error: error
+        })
       }
       return { buffer: null }
     })
@@ -88,8 +94,11 @@ async function saveStickerZip (stickerId: string, buffer: Buffer, emitter?: Emit
   try {
     await fs.writeFile(zipFilename, buffer)
     return zipFilename
-  } catch {
-    emitter?.emit('error', 'Failed to save sticker zip file')
+  } catch (error: any) {
+    emitter?.emit('error', {
+      message: 'Failed to save sticker zip file',
+      error: error
+    })
     return null
   }
 }
@@ -105,8 +114,11 @@ async function extractZipFile (filename: string, emitter?: Emitter<TaskEvents>) 
     .then(() => {
       return stickerDirPath
     })
-    .catch(() => {
-      emitter?.emit('error', 'Failed to extract sticker zip')
+    .catch((error) => {
+      emitter?.emit('error', {
+        message: 'Failed to extract sticker zip',
+        error: error
+      })
       return null
     })
 }
@@ -127,8 +139,11 @@ async function loadStickerPack (stickerDirPath: string, emitter?: Emitter<TaskEv
       stickerFilenameList: meta.stickers.map(({ id }) => path.join(stickerDirPath, `${id}@2x.png`))
     }
     return pack
-  } catch {
-    emitter?.emit('error', 'Failed to load sicker pack')
+  } catch (error: any) {
+    emitter?.emit('error', {
+      message: 'Failed to load sicker pack',
+      error: error
+    })
     return null
   }
 }

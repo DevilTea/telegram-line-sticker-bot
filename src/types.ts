@@ -28,12 +28,15 @@ export type Task = {
   exec: (info: TaskInfo) => Promise<void>;
 }
 
-export type TaskErrorReason = |
-  'Unknown sticker id' |
-  "Failed to get sticker's zip buffer" |
-  'Failed to save sticker zip file' |
-  'Failed to extract sticker zip' |
-  'Failed to load sicker pack'
+export type TaskErrorReason = {
+  message: |
+    'Unknown sticker id' |
+    "Failed to get sticker's zip buffer" |
+    'Failed to save sticker zip file' |
+    'Failed to extract sticker zip' |
+    'Failed to load sicker pack'
+  error: Error;
+}
 
 export type TaskEvents = {
   error: TaskErrorReason;
